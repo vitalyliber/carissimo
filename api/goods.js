@@ -22,3 +22,24 @@ export const createGood = async (data) => {
     return data;
   });
 };
+
+export const editGood = async ({ data, id }) => {
+  return axios({
+    method: "patch",
+    url: `${endpoint}/car_goods/${id}`,
+    data: { good: data },
+  }).then(({ data }) => {
+    console.log("editGood", data);
+    return data;
+  });
+};
+
+export const deleteGood = async (id) => {
+  return axios({
+    method: "delete",
+    url: `${endpoint}/car_goods/${id}`,
+  }).then(({ data }) => {
+    console.log("deleteGood", data);
+    return data;
+  });
+};

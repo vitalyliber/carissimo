@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import Link from "next/link";
 import {
   Box,
   Heading,
@@ -19,12 +20,14 @@ import {
   ModalFooter,
   ModalBody,
   ModalCloseButton,
+  IconButton,
 } from "@chakra-ui/react";
 import { EditIcon } from "@chakra-ui/icons";
 
 import Highlighter from "react-highlight-words";
 
 export default function Tile({
+  id,
   name,
   good_code,
   producer,
@@ -43,7 +46,14 @@ export default function Tile({
   };
   return (
     <>
-      <Box borderRadius="md" border="1px" borderColor="gray.200" p={4} mb={4}>
+      <Box
+        position="relative"
+        borderRadius="md"
+        border="1px"
+        borderColor="gray.200"
+        p={4}
+        mb={4}
+      >
         <Heading mb={3} size="md">
           <Highlighter
             highlightClassName="YourHighlightClass"
@@ -100,6 +110,18 @@ export default function Tile({
             </Badge>
           </WrapItem>
         </Wrap>
+        <Box position="absolute" right={3} top={3}>
+          <Link href={`/edit/${id}`}>
+            <a>
+              <IconButton
+                size="sm"
+                colorScheme="teal"
+                aria-label="Search database"
+                icon={<EditIcon />}
+              />
+            </a>
+          </Link>
+        </Box>
       </Box>
       <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={initialRef}>
         <ModalOverlay />

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import {
   FormControl,
@@ -14,24 +15,24 @@ import {
   Button,
   Select,
 } from "@chakra-ui/react";
-import { createGood } from "../api/goods";
 
-export default function Form() {
-  const { handleSubmit, errors, register, formState, setError } = useForm();
-  async function onSubmit(values) {
-    try {
-      await createGood(values);
-    } catch (e) {
-      Object.keys(e.response.data).forEach((key) =>
-        setError("key", { type: "manual", message: e.response.data[key][0] })
-      );
-
-      console.log("Errors", e.response.data);
+export default function Form({ onSubmit, values }) {
+  const {
+    handleSubmit,
+    errors,
+    register,
+    formState,
+    setError,
+    setValue,
+  } = useForm();
+  useEffect(() => {
+    if (values) {
+      Object.keys(values).forEach((key) => setValue(key, values[key]));
     }
-  }
+  }, [values]);
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(onSubmit(setError))}>
         <FormControl isInvalid={errors.name} id="name" isRequired>
           <FormLabel htmlFor="name">Наименование</FormLabel>
           <Input name="name" ref={register({ required: true })} />
@@ -108,7 +109,11 @@ export default function Form() {
         </FormControl>
         <FormControl mt={4} id="comment">
           <FormLabel>Комментарий</FormLabel>
-          <Textarea name="comment" size="sm" />
+          <Textarea
+            ref={register({ required: true })}
+            name="comment"
+            size="sm"
+          />
           <FormHelperText>Замечания о товаре</FormHelperText>
         </FormControl>
         <Button
@@ -119,7 +124,7 @@ export default function Form() {
           isLoading={formState.isSubmitting}
           type="submit"
         >
-          Создать
+          Сохранить
         </Button>
       </form>
     </>
