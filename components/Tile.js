@@ -14,7 +14,7 @@ export default function Tile({
       <Heading mb={3} size="md">
         <Highlighter
           highlightClassName="YourHighlightClass"
-          searchWords={search.split(' ')}
+          searchWords={search}
           autoEscape={true}
           textToHighlight={name}
         />
