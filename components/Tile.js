@@ -1,4 +1,5 @@
-import { Box, Heading, Badge, Stack } from "@chakra-ui/react";
+import { Box, Heading, Badge, Wrap, WrapItem } from "@chakra-ui/react";
+import Highlighter from "react-highlight-words";
 
 export default function Tile({
   name,
@@ -6,28 +7,43 @@ export default function Tile({
   producer,
   bar_code,
   article_code,
+  search,
 }) {
   return (
     <Box borderRadius="md" border="1px" borderColor="gray.200" p={4} mb={4}>
       <Heading mb={3} size="md">
-        {name}
+        <Highlighter
+          highlightClassName="YourHighlightClass"
+          searchWords={search.split(' ')}
+          autoEscape={true}
+          textToHighlight={name}
+        />
       </Heading>
-      <Stack direction="row">
-        <Badge variant="outline" fontSize="0.8em">
-          Код: {good_code}
-        </Badge>
-        {bar_code && (
+      <Wrap direction="row">
+        <WrapItem>
           <Badge variant="outline" fontSize="0.8em">
-            Штрихкод: {bar_code}
+            Код: {good_code}
           </Badge>
+        </WrapItem>
+
+        {bar_code && (
+          <WrapItem>
+            <Badge variant="outline" fontSize="0.8em">
+              Штрихкод: {bar_code}
+            </Badge>
+          </WrapItem>
         )}
-        <Badge variant="outline" fontSize="0.8em">
-          Арт: {article_code}
-        </Badge>
-        <Badge variant="outline" fontSize="0.8em">
-          Пост: {producer}
-        </Badge>
-      </Stack>
+        <WrapItem>
+          <Badge variant="outline" fontSize="0.8em">
+            Арт: {article_code}
+          </Badge>
+        </WrapItem>
+        <WrapItem>
+          <Badge variant="outline" fontSize="0.8em">
+            Пост: {producer}
+          </Badge>
+        </WrapItem>
+      </Wrap>
     </Box>
   );
 }

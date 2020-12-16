@@ -14,7 +14,7 @@ import Tile from "../components/Tile";
 export default function Home() {
   const [value, setValue] = useState("");
   const { data, error } = useSWR(
-    `${endpoint}/car_goods?search=${value}`,
+    `${endpoint}/car_goods?search=${value}&limit=10`,
     getGoods
   );
   const handleChange = (event) => setValue(event.target.value);
@@ -38,7 +38,7 @@ export default function Home() {
         </Center>
       )}
       {data?.list?.map((el) => (
-        <Tile key={el.id} {...el} />
+        <Tile key={el.id} {...el} search={value} />
       ))}
       {data?.list?.length === 0 && (
         <Center mt={4}>
