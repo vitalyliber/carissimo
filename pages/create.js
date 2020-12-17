@@ -3,8 +3,10 @@ import Form from "../components/Form";
 import { Box, Center, Heading, useToast } from "@chakra-ui/react";
 import { createGood } from "../api/goods";
 import { useRouter } from "next/router";
+import { mutate } from "swr";
+import { endpoint } from "../api/credentials";
 export default function Create() {
-  const toast = useToast()
+  const toast = useToast();
   const router = useRouter();
   const onSubmit = (setError) => async (values) => {
     try {
@@ -14,8 +16,9 @@ export default function Create() {
         status: "success",
         duration: 9000,
         isClosable: true,
-      })
-      await router.push('/admin')
+      });
+      await router.push("/admin");
+      mutate(`${endpoint}/car_goods/sum`);
     } catch (e) {
       Object.keys(e.response.data).forEach((key) =>
         setError(key, { type: "manual", message: e.response.data[key][0] })
@@ -27,7 +30,7 @@ export default function Create() {
         status: "error",
         duration: 9000,
         isClosable: true,
-      })
+      });
     }
   };
   return (
