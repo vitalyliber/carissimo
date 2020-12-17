@@ -38,7 +38,7 @@ export default function Header() {
                 style: "currency",
                 currency: "RUB",
               }).format(data?.sum || 0)}
-              {!data && (
+              {!data?.sum && (
                 <CircularProgress
                   center
                   isIndeterminate

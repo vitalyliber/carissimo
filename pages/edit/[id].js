@@ -43,7 +43,7 @@ export default function Create() {
         isClosable: true,
       });
       await router.push("/admin");
-      mutate(`${endpoint}/car_goods/sum`)
+      mutate(`${endpoint}/car_goods/sum`, {})
     } catch (e) {
       Object.keys(e.response.data).forEach((key) =>
         setError(key, { type: "manual", message: e.response.data[key][0] })

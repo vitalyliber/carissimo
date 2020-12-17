@@ -12,7 +12,10 @@ import {
   Button,
   Text,
   Checkbox,
+  InputGroup,
+  InputRightElement,
 } from "@chakra-ui/react";
+import { CloseIcon } from "@chakra-ui/icons";
 import Tile from "../components/Tile";
 import useDebounce from "../hooks/useDebounce";
 import Header from "../components/Header";
@@ -23,7 +26,7 @@ export default function Admin() {
   const [page, setPage] = useState(1);
   const debouncedValue = useDebounce(value, 500);
 
-  const { data, error } = useSWR(
+  const { data, mutate } = useSWR(
     `${endpoint}/car_goods?search=${debouncedValue}&limit=10&page=${page}&inactive=${
       inactive ? "true" : ""
     }`,
@@ -35,13 +38,19 @@ export default function Admin() {
     <>
       <Header />
       <Box p={4}>
-        <Input
-          focusBorderColor="pink.200"
-          size="lg"
-          onChange={handleChange}
-          placeholder="Поиск по товарам"
-          mb={2}
-        />
+        <InputGroup mb={2}>
+          <Input
+            focusBorderColor="pink.200"
+            size="lg"
+            onChange={handleChange}
+            placeholder="Поиск по товарам"
+            value={value}
+          />
+          <InputRightElement onClick={() => setValue('')} cursor="pointer" height="100%" display="flex" alignItems="center">
+            <CloseIcon color="gray.500" />
+          </InputRightElement>
+        </InputGroup>
+
         <Stack
           borderRadius="md"
           border="1px"
@@ -69,7 +78,7 @@ export default function Admin() {
           </Center>
         )}
         {data?.list?.map((el) => (
-          <Tile key={el.id} {...el} search={splitValue} />
+          <Tile key={el.id} {...el} search={splitValue} mutateList={mutate} />
         ))}
         {data?.list?.length === 0 && (
           <Center mt={4}>

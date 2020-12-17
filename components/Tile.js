@@ -21,10 +21,15 @@ import {
   ModalBody,
   ModalCloseButton,
   IconButton,
+  useToast,
 } from "@chakra-ui/react";
 import { EditIcon } from "@chakra-ui/icons";
 
 import Highlighter from "react-highlight-words";
+import { editGood } from "../api/goods";
+import { useRouter } from "next/router";
+import { mutate } from "swr";
+import { endpoint } from "../api/credentials";
 
 export default function Tile({
   id,
@@ -36,7 +41,9 @@ export default function Tile({
   search,
   balance,
   price,
+  mutateList,
 }) {
+  const [isLoading, setIsLoading] = useState(false);
   const { onOpen, onClose: initialOnClose, isOpen } = useDisclosure();
   const initialRef = useRef(null);
   const [stateBalance, setStateBalance] = useState(balance);
@@ -44,6 +51,8 @@ export default function Tile({
     initialOnClose();
     setStateBalance(balance);
   };
+  const router = useRouter();
+  const toast = useToast();
   return (
     <>
       <Box
@@ -101,7 +110,7 @@ export default function Tile({
             <Badge
               onClick={onOpen}
               cursor="pointer"
-              colorScheme="green"
+              colorScheme={balance > 0 ? "blue" : "green"}
               variant="outline"
               fontSize="0.8em"
             >
@@ -143,10 +152,46 @@ export default function Tile({
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
+            <Button variant="ghost" mr={3} onClick={onClose}>
               Закрыть
             </Button>
-            <Button variant="ghost">Сохранить</Button>
+            <Button
+              isLoading={isLoading}
+              onClick={async () => {
+                initialOnClose();
+                try {
+                  setIsLoading(true);
+                  await editGood({ data: { balance: stateBalance }, id });
+                  toast({
+                    title: "Баланс обновлен",
+                    status: "success",
+                    duration: 9000,
+                    isClosable: true,
+                  });
+                  mutate(`${endpoint}/car_goods/sum`, {});
+                  mutateList(async (data) => ({
+                    ...data,
+                    list: data?.list.map((el) =>
+                      el.id === id ? { ...el, balance: stateBalance } : el
+                    ),
+                  }));
+                  await router.push("/admin");
+                } catch (e) {
+                  console.log(e);
+                  toast({
+                    title: "Ошибка обновления баланса",
+                    status: "error",
+                    duration: 9000,
+                    isClosable: true,
+                  });
+                } finally {
+                  setIsLoading(false);
+                }
+              }}
+              colorScheme="blue"
+            >
+              Сохранить
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
