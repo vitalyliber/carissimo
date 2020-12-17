@@ -15,7 +15,7 @@ export default function Create() {
         duration: 9000,
         isClosable: true,
       })
-      await router.push('/')
+      await router.push('/admin')
     } catch (e) {
       Object.keys(e.response.data).forEach((key) =>
         setError(key, { type: "manual", message: e.response.data[key][0] })

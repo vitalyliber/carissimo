@@ -5,15 +5,22 @@ import {
   Divider,
   IconButton,
   Stack,
+  Menu,
+  MenuButton,
+  MenuList,
+  MenuItem,
 } from "@chakra-ui/react";
+import cookieCutter from "cookie-cutter";
+import { useRouter } from "next/router";
 import Link from "next/link";
 import { AddIcon, SettingsIcon } from "@chakra-ui/icons";
 
 export default function Header() {
+  const router = useRouter();
   return (
     <>
       <Flex alignItems="center" p={4}>
-        <Link href="/">
+        <Link href="/admin">
           <a>
             <Heading size="md">Учет товаров</Heading>
           </a>
@@ -29,7 +36,23 @@ export default function Header() {
               />
             </a>
           </Link>
-          <IconButton aria-label="Настройки" icon={<SettingsIcon />} />
+          <Menu>
+            <MenuButton
+              as={IconButton}
+              aria-label="Настройки"
+              icon={<SettingsIcon />}
+            />
+            <MenuList>
+              <MenuItem
+                onClick={() => {
+                  cookieCutter.set('token', '')
+                  router.push("/");
+                }}
+              >
+                Выйти
+              </MenuItem>
+            </MenuList>
+          </Menu>
         </Stack>
       </Flex>
       <Divider />

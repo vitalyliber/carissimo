@@ -84,7 +84,7 @@ export default function Form({ onSubmit, values }) {
         </FormControl>
         <FormControl mt={4} id="bar_code">
           <FormLabel>Штрихкод</FormLabel>
-          <Input name="bar_code" />
+          <Input ref={register()} name="bar_code" />
           <FormHelperText>Например: 234002634987</FormHelperText>
         </FormControl>
         <FormControl mt={4} id="balance">
@@ -110,7 +110,7 @@ export default function Form({ onSubmit, values }) {
         <FormControl mt={4} id="comment">
           <FormLabel>Комментарий</FormLabel>
           <Textarea
-            ref={register({ required: true })}
+            ref={register()}
             name="comment"
             size="sm"
           />

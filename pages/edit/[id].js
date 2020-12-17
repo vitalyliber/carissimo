@@ -14,7 +14,7 @@ import {
   AlertDialogContent,
   AlertDialogOverlay,
 } from "@chakra-ui/react";
-import { createGood, deleteGood, editGood, getGoods } from "api/goods";
+import { deleteGood, editGood, getGoods } from "api/goods";
 import useSWR from "swr";
 import { useRouter } from "next/router";
 import { endpoint } from "../../api/credentials";
@@ -41,7 +41,7 @@ export default function Create() {
         duration: 9000,
         isClosable: true,
       });
-      await router.push("/");
+      await router.push("/admin");
     } catch (e) {
       Object.keys(e.response.data).forEach((key) =>
         setError(key, { type: "manual", message: e.response.data[key][0] })
@@ -65,17 +65,52 @@ export default function Create() {
             Редактирование
           </Heading>
           <Form values={data} onSubmit={onSubmit} />
-          <Button
-            mb={4}
-            isFullWidth
-            mt={2}
-            colorScheme="red"
-            onClick={() => setIsOpen(true)}
-            isLoading={isLoading}
-            type="button"
-          >
-            Удалить
-          </Button>
+          {data?.active && (
+            <Button
+              mb={4}
+              isFullWidth
+              colorScheme="red"
+              onClick={() => setIsOpen(true)}
+              isLoading={isLoading}
+              type="button"
+            >
+              Скрыть
+            </Button>
+          )}
+          {!data?.active && (
+            <Button
+              mb={4}
+              isFullWidth
+              colorScheme="green"
+              onClick={async () => {
+                try {
+                  setIsLoading(true)
+                  await editGood({ data: { active: true }, id: data.id });
+                  await router.push("/admin");
+                  toast({
+                    title: "Товар активирован",
+                    status: "success",
+                    duration: 9000,
+                    isClosable: true,
+                  });
+                } catch (e) {
+                  console.log(e);
+                  toast({
+                    title: "Ошибка активации товара",
+                    status: "error",
+                    duration: 9000,
+                    isClosable: true,
+                  });
+                } finally {
+                  setIsLoading(false)
+                }
+              }}
+              isLoading={isLoading}
+              type="button"
+            >
+              Активировать
+            </Button>
+          )}
         </Box>
       </Center>
       <AlertDialog
@@ -86,12 +121,10 @@ export default function Create() {
         <AlertDialogOverlay>
           <AlertDialogContent>
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
-              Удаление товара
+              Скрытие товара
             </AlertDialogHeader>
 
-            <AlertDialogBody>
-              Вы уверены? Вернуть товар будет невозможно
-            </AlertDialogBody>
+            <AlertDialogBody>Вы уверены?</AlertDialogBody>
 
             <AlertDialogFooter>
               <Button ref={cancelRef} onClick={onClose}>
@@ -102,30 +135,30 @@ export default function Create() {
                 onClick={async () => {
                   onClose();
                   try {
-                    setIsLoading(true)
+                    setIsLoading(true);
                     await deleteGood(id);
                     toast({
-                      title: "Товар удален",
+                      title: "Товар скрыт",
                       status: "success",
                       duration: 9000,
                       isClosable: true,
                     });
-                    await router.push("/");
+                    await router.push("/admin");
                   } catch (e) {
                     console.log(e);
                     toast({
-                      title: "Ошибка удаления товара",
+                      title: "Ошибка скрытия товара",
                       status: "error",
                       duration: 9000,
                       isClosable: true,
                     });
                   } finally {
-                    setIsLoading(false)
+                    setIsLoading(false);
                   }
                 }}
                 ml={3}
               >
-                Удалить
+                Скрыть
               </Button>
             </AlertDialogFooter>
           </AlertDialogContent>
