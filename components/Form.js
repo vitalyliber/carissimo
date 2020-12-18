@@ -33,7 +33,7 @@ export default function Form({ onSubmit, values }) {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit(setError))}>
-        <FormControl isInvalid={errors.name} id="name" isRequired>
+        <FormControl isDisabled={!values} isInvalid={errors.name} id="name" isRequired>
           <FormLabel htmlFor="name">Наименование</FormLabel>
           <Input name="name" ref={register({ required: true })} />
           <FormErrorMessage>
@@ -41,6 +41,7 @@ export default function Form({ onSubmit, values }) {
           </FormErrorMessage>
         </FormControl>
         <FormControl
+          isDisabled={!values}
           isInvalid={errors.article_code}
           mt={4}
           id="article_code"
@@ -53,7 +54,7 @@ export default function Form({ onSubmit, values }) {
             {errors.article_code && errors.article_code.message}
           </FormErrorMessage>
         </FormControl>
-        <FormControl mt={4} id="good_code" isRequired>
+        <FormControl isDisabled={!values} mt={4} id="good_code" isRequired>
           <FormLabel>Код товара</FormLabel>
           <Input name="good_code" ref={register({ required: true })} />
           <FormHelperText>Например: 071017</FormHelperText>
@@ -61,7 +62,7 @@ export default function Form({ onSubmit, values }) {
             {errors.good_code && errors.good_code.message}
           </FormErrorMessage>
         </FormControl>
-        <FormControl mt={4} id="producer" isRequired>
+        <FormControl isDisabled={!values} mt={4} id="producer" isRequired>
           <FormLabel>Производитель</FormLabel>
           <Input name="producer" ref={register({ required: true })} />
           <FormHelperText>Например: Grass</FormHelperText>
@@ -69,7 +70,7 @@ export default function Form({ onSubmit, values }) {
             {errors.producer && errors.producer.message}
           </FormErrorMessage>
         </FormControl>
-        <FormControl mt={4} id="price" isRequired>
+        <FormControl isDisabled={!values} mt={4} id="price" isRequired>
           <FormLabel>Цена</FormLabel>
           <NumberInput defaultValue={0} min={0}>
             <NumberInputField name="price" ref={register({ required: true })} />
@@ -82,12 +83,12 @@ export default function Form({ onSubmit, values }) {
             {errors.price && errors.price.message}
           </FormErrorMessage>
         </FormControl>
-        <FormControl mt={4} id="bar_code">
+        <FormControl isDisabled={!values} mt={4} id="bar_code">
           <FormLabel>Штрихкод</FormLabel>
           <Input ref={register()} name="bar_code" />
           <FormHelperText>Например: 234002634987</FormHelperText>
         </FormControl>
-        <FormControl mt={4} id="balance">
+        <FormControl isDisabled={!values} mt={4} id="balance">
           <FormLabel>Остаток</FormLabel>
           <NumberInput defaultValue={0} min={0}>
             <NumberInputField
@@ -101,13 +102,13 @@ export default function Form({ onSubmit, values }) {
           </NumberInput>
           <FormHelperText>Количество товара в наличие на слкаде</FormHelperText>
         </FormControl>
-        <FormControl mt={4} id="package">
+        <FormControl isDisabled={!values} mt={4} id="package">
           <FormLabel>Единица измерения</FormLabel>
           <Select ref={register({ required: true })} name="package" isRequired>
             <option>шт</option>
           </Select>
         </FormControl>
-        <FormControl mt={4} id="comment">
+        <FormControl isDisabled={!values} mt={4} id="comment">
           <FormLabel>Комментарий</FormLabel>
           <Textarea
             ref={register()}

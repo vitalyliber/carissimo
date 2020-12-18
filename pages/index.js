@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import cookieCutter from "cookie-cutter";
 import {
   Input,
@@ -13,11 +13,17 @@ import {
 import { checkAuth } from "../api/credentials";
 import { useRouter } from "next/router";
 
-export default function Home() {
+export default function Home({}) {
   const toast = useToast();
   const [key, setKey] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
+  useEffect(() => {
+    if (cookieCutter.get('token')?.length > 0) {
+      router.push('/admin')
+    }
+  },[])
+
   return (
     <Center alignItems="center" height="100vh">
       <Flex alignItems="center" flexDirection="column" width="100%">
@@ -47,7 +53,7 @@ export default function Home() {
                   duration: 9000,
                   isClosable: true,
                 });
-                router.push('/admin')
+                router.push("/admin");
               } catch (e) {
                 console.log(e);
                 toast({
@@ -73,15 +79,4 @@ export default function Home() {
       </Flex>
     </Center>
   );
-}
-
-export async function getServerSideProps({ res, req, params }) {
-  const token = req.cookies.token || "";
-  if (token?.length > 0) {
-    res.setHeader("location", "/admin");
-    res.statusCode = 302;
-    res.end();
-    return;
-  }
-  return { props: {} };
 }
