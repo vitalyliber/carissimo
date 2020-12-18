@@ -41,7 +41,7 @@ export default function Create() {
           <Heading size="md" mb={5}>
             Создание товара
           </Heading>
-          <Form onSubmit={onSubmit} />
+          <Form values={{}} onSubmit={onSubmit} />
         </Box>
       </Center>
     </>

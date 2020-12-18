@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import useSWR from "swr";
 import { endpoint } from "../api/credentials";
 import { getGoods } from "../api/goods";
@@ -19,8 +19,16 @@ import { CloseIcon } from "@chakra-ui/icons";
 import Tile from "../components/Tile";
 import useDebounce from "../hooks/useDebounce";
 import Header from "../components/Header";
+import cookieCutter from "cookie-cutter";
+import { useRouter } from "next/router";
 
 export default function Admin() {
+  const router = useRouter();
+  useEffect(() => {
+    if (cookieCutter.get("token")?.length === 0) {
+      router.push("/");
+    }
+  }, []);
   const [inactive, setInactive] = useState(false);
   const [value, setValue] = useState("");
   const [page, setPage] = useState(1);
@@ -46,7 +54,13 @@ export default function Admin() {
             placeholder="Поиск по товарам"
             value={value}
           />
-          <InputRightElement onClick={() => setValue('')} cursor="pointer" height="100%" display="flex" alignItems="center">
+          <InputRightElement
+            onClick={() => setValue("")}
+            cursor="pointer"
+            height="100%"
+            display="flex"
+            alignItems="center"
+          >
             <CloseIcon color="gray.500" />
           </InputRightElement>
         </InputGroup>
