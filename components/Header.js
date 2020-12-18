@@ -25,6 +25,7 @@ export default function Header() {
   const { data } = useSWR(`${endpoint}/car_goods/sum`, getGoods, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
+    revalidateOnMount: !router.pathname.includes('edit')
   });
   return (
     <>
