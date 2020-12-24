@@ -30,6 +30,7 @@ import { editGood } from "../api/goods";
 import { useRouter } from "next/router";
 import { mutate } from "swr";
 import { endpoint } from "../api/credentials";
+import Changes from "./Changes";
 
 export default function Tile({
   id,
@@ -193,6 +194,9 @@ export default function Tile({
               Сохранить
             </Button>
           </ModalFooter>
+          <ModalBody>
+            <Changes id={id} />
+          </ModalBody>
         </ModalContent>
       </Modal>
     </>
