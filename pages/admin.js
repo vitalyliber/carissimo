@@ -60,6 +60,7 @@ export default function Admin() {
             height="100%"
             display="flex"
             alignItems="center"
+            zIndex={0}
           >
             <CloseIcon color="gray.500" />
           </InputRightElement>

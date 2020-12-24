@@ -18,15 +18,23 @@ import Link from "next/link";
 import { AddIcon, SettingsIcon, TriangleUpIcon } from "@chakra-ui/icons";
 import useSWR from "swr";
 import { endpoint } from "../api/credentials";
-import { getGoods } from "../api/goods";
+import fetcher from "../api/fetcher";
 
 export default function Header() {
   const router = useRouter();
-  const { data } = useSWR(`${endpoint}/car_goods/sum`, getGoods, {
+  const { data } = useSWR(`${endpoint}/car_goods/sum`, fetcher, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
-    revalidateOnMount: !router.pathname.includes('edit')
+    revalidateOnMount: !router.pathname.includes("edit"),
   });
+  const { data: userInfo } = useSWR(
+    `${endpoint}/car_goods/user_info`,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    }
+  );
   return (
     <>
       <Flex alignItems="center" p={4}>
@@ -71,6 +79,12 @@ export default function Header() {
               icon={<SettingsIcon />}
             />
             <MenuList>
+              {userInfo && (
+                <>
+                  <MenuItem>{userInfo.name}</MenuItem>
+                  <Divider />
+                </>
+              )}
               <MenuItem
                 onClick={() => {
                   cookieCutter.set("token", "");

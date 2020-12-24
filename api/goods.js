@@ -1,10 +1,9 @@
-import onceAxios from "./onceAxios";
 import axios from "axios";
 import { endpoint } from "./credentials";
 import cookieCutter from "cookie-cutter";
 
 export const getGoods = async (url) => {
-  return onceAxios({
+  return axios({
     method: "get",
     url: url,
   }).then(({ data }) => {
