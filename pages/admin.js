@@ -13,7 +13,7 @@ import {
   Text,
   Checkbox,
   InputGroup,
-  InputRightElement,
+  IconButton,
 } from "@chakra-ui/react";
 import { CloseIcon } from "@chakra-ui/icons";
 import Tile from "../components/Tile";
@@ -54,16 +54,13 @@ export default function Admin() {
             placeholder="Поиск по товарам"
             value={value}
           />
-          <InputRightElement
+          <IconButton
             onClick={() => setValue("")}
-            cursor="pointer"
-            height="100%"
-            display="flex"
-            alignItems="center"
-            zIndex={0}
-          >
-            <CloseIcon color="gray.500" />
-          </InputRightElement>
+            aria-label="Search database"
+            icon={<CloseIcon color="gray.500" />}
+            size="lg"
+            ml={3}
+          />
         </InputGroup>
 
         <Stack
