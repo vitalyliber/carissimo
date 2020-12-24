@@ -5,7 +5,10 @@ import fetcher from "../api/fetcher";
 import Change from "./Change";
 
 export default function Changes({ id }) {
-  const { data } = useSWR(`${endpoint}/car_goods/${id}/changes`, fetcher);
+  const url = id
+    ? `${endpoint}/car_goods/${id}/changes`
+    : `${endpoint}/car_goods/actions`;
+  const { data } = useSWR(url, fetcher);
   if (!data) {
     return (
       <Center>

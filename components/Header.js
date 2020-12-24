@@ -15,7 +15,12 @@ import {
 import cookieCutter from "cookie-cutter";
 import { useRouter } from "next/router";
 import Link from "next/link";
-import { AddIcon, SettingsIcon, TriangleUpIcon } from "@chakra-ui/icons";
+import {
+  AddIcon,
+  SettingsIcon,
+  TriangleUpIcon,
+  TimeIcon,
+} from "@chakra-ui/icons";
 import useSWR from "swr";
 import { endpoint } from "../api/credentials";
 import fetcher from "../api/fetcher";
@@ -69,6 +74,15 @@ export default function Header() {
                 colorScheme="teal"
                 aria-label="Добавить товар"
                 icon={<AddIcon />}
+              />
+            </a>
+          </Link>
+          <Link href="/actions">
+            <a>
+              <IconButton
+                colorScheme="teal"
+                aria-label="Добавить товар"
+                icon={<TimeIcon />}
               />
             </a>
           </Link>

@@ -1,9 +1,11 @@
 import { Box, Stack, Text, VStack, StackDivider } from "@chakra-ui/react";
 import moment from "moment";
+import 'moment/locale/ru'
+moment.locale('ru')
 
 export default function Change({ user, created_at, object_changes }) {
   return (
-    <Box>
+    <Box mb={5}>
       <Stack
         justifyContent="space-between"
         borderRadius="md"
@@ -15,14 +17,14 @@ export default function Change({ user, created_at, object_changes }) {
         pr={4}
         pt={2}
         pb={2}
-        mb={5}
+        mb={2}
       >
         <Text fontWeight="bolder">{user}</Text>
         <Text color="gray.500">{moment(created_at).fromNow()}</Text>
       </Stack>
       <VStack
         divider={<StackDivider borderColor="gray.200" />}
-        spacing={4}
+        spacing={2}
         align="stretch"
       >
         {Object.keys(object_changes).map((key) => (
