@@ -45,26 +45,25 @@ export default function Form({ onSubmit, values }) {
           isInvalid={errors.article_code}
           mt={4}
           id="article_code"
-          isRequired
         >
           <FormLabel>Артикул</FormLabel>
-          <Input name="article_code" ref={register({ required: true })} />
+          <Input name="article_code" ref={register()} />
           <FormHelperText>Например: АС-317</FormHelperText>
           <FormErrorMessage>
             {errors.article_code && errors.article_code.message}
           </FormErrorMessage>
         </FormControl>
-        <FormControl isDisabled={!values} mt={4} id="good_code" isRequired>
+        <FormControl isDisabled={!values} mt={4} id="good_code">
           <FormLabel>Код товара</FormLabel>
-          <Input name="good_code" ref={register({ required: true })} />
+          <Input name="good_code" ref={register()} />
           <FormHelperText>Например: 071017</FormHelperText>
           <FormErrorMessage>
             {errors.good_code && errors.good_code.message}
           </FormErrorMessage>
         </FormControl>
-        <FormControl isDisabled={!values} mt={4} id="producer" isRequired>
+        <FormControl isDisabled={!values} mt={4} id="producer">
           <FormLabel>Производитель</FormLabel>
-          <Input name="producer" ref={register({ required: true })} />
+          <Input name="producer" ref={register()} />
           <FormHelperText>Например: Grass</FormHelperText>
           <FormErrorMessage>
             {errors.producer && errors.producer.message}
