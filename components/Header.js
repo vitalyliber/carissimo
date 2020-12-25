@@ -1,3 +1,4 @@
+import { useRef, useState } from "react";
 import {
   Flex,
   Spacer,
@@ -11,6 +12,8 @@ import {
   MenuItem,
   Text,
   CircularProgress,
+  useToast,
+  Box,
 } from "@chakra-ui/react";
 import cookieCutter from "cookie-cutter";
 import { useRouter } from "next/router";
@@ -20,19 +23,25 @@ import {
   SettingsIcon,
   TriangleUpIcon,
   TimeIcon,
+  RepeatIcon,
+  DownloadIcon,
 } from "@chakra-ui/icons";
 import useSWR from "swr";
 import { endpoint } from "../api/credentials";
 import fetcher from "../api/fetcher";
+import { updateGoodsViaExcel } from "../api/goods";
 
 export default function Header() {
+  const refFile = useRef(null);
+  const [loading, setLoading] = useState(false);
+  const toast = useToast();
   const router = useRouter();
   const { data } = useSWR(`${endpoint}/car_goods/sum`, fetcher, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
     revalidateOnMount: !router.pathname.includes("edit"),
   });
-  console.log('dddd', data)
+  console.log("dddd", data);
   const { data: userInfo } = useSWR(
     `${endpoint}/car_goods/user_info`,
     fetcher,
@@ -87,6 +96,25 @@ export default function Header() {
               />
             </a>
           </Link>
+          {userInfo?.admin && (
+            <IconButton
+              colorScheme="teal"
+              aria-label="Обновить с помощью Excel"
+              onClick={async () => {
+                await refFile.current.click();
+              }}
+              isLoading={loading}
+              icon={<RepeatIcon />}
+            />
+          )}
+          <IconButton
+            colorScheme="teal"
+            aria-label="Скачать Excel файл"
+            onClick={async () => {
+              alert("Не реализовано");
+            }}
+            icon={<DownloadIcon />}
+          />
           <Menu>
             <MenuButton
               as={IconButton}
@@ -112,6 +140,40 @@ export default function Header() {
           </Menu>
         </Stack>
       </Flex>
+      <Box display="none">
+        <input
+          type="file"
+          name="file"
+          ref={refFile}
+          accept=".xlsx"
+          onChange={async (el) => {
+            console.log(el);
+            const file = refFile.current.files[0];
+            if (file) {
+              try {
+                setLoading(true);
+                await updateGoodsViaExcel(file);
+                toast({
+                  title: "Выгрузка excel завершена",
+                  status: "success",
+                  duration: 25000,
+                  isClosable: true,
+                });
+              } catch (e) {
+                toast({
+                  title: "Ошибка выгрузки excel",
+                  status: "error",
+                  duration: 25000,
+                  isClosable: true,
+                });
+              } finally {
+                setLoading(false);
+                refFile.current.value = "";
+              }
+            }
+          }}
+        />
+      </Box>
       <Divider />
     </>
   );

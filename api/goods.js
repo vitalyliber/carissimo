@@ -47,3 +47,19 @@ export const deleteGood = async (id) => {
     return data;
   });
 };
+
+export const updateGoodsViaExcel = file => {
+  const formData = new FormData();
+  formData.append("file", file);
+  return axios({
+    method: "post",
+    url: `${endpoint}/car_goods/excel_update`,
+    data: formData,
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    }
+  }).then(({ data }) => {
+    console.log("updateGoodsViaExcel", data);
+    return data;
+  });
+};

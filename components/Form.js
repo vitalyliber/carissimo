@@ -33,7 +33,12 @@ export default function Form({ onSubmit, values }) {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit(setError))}>
-        <FormControl isDisabled={!values} isInvalid={errors.name} id="name" isRequired>
+        <FormControl
+          isDisabled={!values}
+          isInvalid={errors.name}
+          id="name"
+          isRequired
+        >
           <FormLabel htmlFor="name">Наименование</FormLabel>
           <Input name="name" ref={register({ required: true })} />
           <FormErrorMessage>
@@ -51,6 +56,13 @@ export default function Form({ onSubmit, values }) {
           <FormHelperText>Например: АС-317</FormHelperText>
           <FormErrorMessage>
             {errors.article_code && errors.article_code.message}
+          </FormErrorMessage>
+        </FormControl>
+        <FormControl isDisabled={!values} mt={4} id="oem_article_code">
+          <FormLabel>Оригинальный Артикул</FormLabel>
+          <Input name="oem_article_code" ref={register()} />
+          <FormErrorMessage>
+            {errors.oem_article_code && errors.oem_article_code.message}
           </FormErrorMessage>
         </FormControl>
         <FormControl isDisabled={!values} mt={4} id="good_code">
@@ -82,18 +94,23 @@ export default function Form({ onSubmit, values }) {
             {errors.price && errors.price.message}
           </FormErrorMessage>
         </FormControl>
-        <FormControl isDisabled={!values} mt={4} id="bar_code">
-          <FormLabel>Штрихкод</FormLabel>
-          <Input ref={register()} name="bar_code" />
-          <FormHelperText>Например: 234002634987</FormHelperText>
+        <FormControl isDisabled={!values} mt={4} id="purchase_price">
+          <FormLabel>Закупочная цена</FormLabel>
+          <NumberInput defaultValue={0} min={0}>
+            <NumberInputField name="purchase_price" ref={register()} />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+          <FormErrorMessage>
+            {errors.purchase_price && errors.purchase_price.message}
+          </FormErrorMessage>
         </FormControl>
         <FormControl isDisabled={!values} mt={4} id="balance">
           <FormLabel>Остаток</FormLabel>
           <NumberInput defaultValue={0} min={0}>
-            <NumberInputField
-              name="balance"
-              ref={register({ required: true })}
-            />
+            <NumberInputField name="balance" ref={register()} />
             <NumberInputStepper>
               <NumberIncrementStepper />
               <NumberDecrementStepper />
@@ -103,17 +120,20 @@ export default function Form({ onSubmit, values }) {
         </FormControl>
         <FormControl isDisabled={!values} mt={4} id="package">
           <FormLabel>Единица измерения</FormLabel>
-          <Select ref={register({ required: true })} name="package" isRequired>
+          <Select ref={register()} name="package">
             <option>шт</option>
+          </Select>
+        </FormControl>
+        <FormControl isDisabled={!values} mt={4} id="auto_type">
+          <FormLabel>Тип</FormLabel>
+          <Select ref={register()} name="auto_type">
+            <option value="car">Легковой</option>
+            <option value="truck">Грузовой</option>
           </Select>
         </FormControl>
         <FormControl isDisabled={!values} mt={4} id="comment">
           <FormLabel>Комментарий</FormLabel>
-          <Textarea
-            ref={register()}
-            name="comment"
-            size="sm"
-          />
+          <Textarea ref={register()} name="comment" size="sm" />
           <FormHelperText>Замечания о товаре</FormHelperText>
         </FormControl>
         <Button
