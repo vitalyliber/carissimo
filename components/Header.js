@@ -29,7 +29,7 @@ import {
 import useSWR from "swr";
 import { endpoint } from "../api/credentials";
 import fetcher from "../api/fetcher";
-import { updateGoodsViaExcel } from "../api/goods";
+import { generateExcelFile, updateGoodsViaExcel } from "../api/goods";
 
 export default function Header() {
   const refFile = useRef(null);
@@ -41,7 +41,6 @@ export default function Header() {
     revalidateOnReconnect: false,
     revalidateOnMount: !router.pathname.includes("edit"),
   });
-  console.log("dddd", data);
   const { data: userInfo } = useSWR(
     `${endpoint}/car_goods/user_info`,
     fetcher,
@@ -49,6 +48,10 @@ export default function Header() {
       revalidateOnFocus: false,
       revalidateOnReconnect: false,
     }
+  );
+  const { data: generationStatus, mutate: mutateGenerationStatus } = useSWR(
+    `${endpoint}/car_goods/generation_status`,
+    fetcher
   );
   return (
     <>
@@ -91,14 +94,14 @@ export default function Header() {
             <a>
               <IconButton
                 colorScheme="teal"
-                aria-label="Добавить товар"
+                aria-label="Список изменений"
                 icon={<TimeIcon />}
               />
             </a>
           </Link>
           {userInfo?.admin && (
             <IconButton
-              colorScheme="teal"
+              colorScheme="red"
               aria-label="Обновить с помощью Excel"
               onClick={async () => {
                 await refFile.current.click();
@@ -107,14 +110,55 @@ export default function Header() {
               icon={<RepeatIcon />}
             />
           )}
-          <IconButton
-            colorScheme="teal"
-            aria-label="Скачать Excel файл"
-            onClick={async () => {
-              alert("Не реализовано");
-            }}
-            icon={<DownloadIcon />}
-          />
+          <Menu>
+            <MenuButton
+              isLoading={["new_processing", "in_processing"].includes(
+                generationStatus?.processing_status
+              )}
+              colorScheme="blue"
+              aria-label="Скачать Excel файл"
+              as={IconButton}
+              icon={<DownloadIcon />}
+            />
+            <MenuList>
+              <MenuItem
+                onClick={async () => {
+                  try {
+                    await generateExcelFile();
+                    mutateGenerationStatus(
+                      async (dataEl) => ({
+                        ...dataEl,
+                        processing_status: "new_processing",
+                      }),
+                      false
+                    );
+                    toast({
+                      title: "Начат процесс создания Excel файла",
+                      status: "success",
+                      duration: 25000,
+                      isClosable: true,
+                    });
+                  } catch (e) {
+                    toast({
+                      title: "Ошибка генерации файла",
+                      status: "error",
+                      duration: 25000,
+                      isClosable: true,
+                    });
+                  }
+                }}
+              >
+                Сгенерировать Excel
+              </MenuItem>
+              <Divider />
+              {generationStatus?.url && (
+                <a href={`${endpoint}/${generationStatus?.url}`}>
+                  <MenuItem>Скачать Excel</MenuItem>
+                </a>
+              )}
+            </MenuList>
+          </Menu>
+
           <Menu>
             <MenuButton
               as={IconButton}

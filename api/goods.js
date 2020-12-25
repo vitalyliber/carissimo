@@ -63,3 +63,15 @@ export const updateGoodsViaExcel = file => {
     return data;
   });
 };
+
+export const generateExcelFile = async () => {
+  const token = await cookieCutter.get("token");
+  return axios({
+    method: "post",
+    url: `${endpoint}/car_goods/generate_file`,
+    data: { token },
+  }).then(({ data }) => {
+    console.log("generateExcelFile", data);
+    return data;
+  });
+};
