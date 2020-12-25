@@ -32,6 +32,7 @@ export default function Header() {
     revalidateOnReconnect: false,
     revalidateOnMount: !router.pathname.includes("edit"),
   });
+  console.log('dddd', data)
   const { data: userInfo } = useSWR(
     `${endpoint}/car_goods/user_info`,
     fetcher,
@@ -52,7 +53,7 @@ export default function Header() {
                 style: "currency",
                 currency: "RUB",
               }).format(data?.sum || 0)}
-              {!data?.sum && (
+              {!data && (
                 <CircularProgress
                   center
                   isIndeterminate
