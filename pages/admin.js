@@ -40,7 +40,10 @@ export default function Admin() {
     }`,
     getGoods
   );
-  const handleChange = (event) => setValue(event.target.value);
+  const handleChange = (event) => {
+    setValue(event.target.value);
+    setPage(1)
+  };
   const splitValue = useMemo(() => debouncedValue.split(" "), [debouncedValue]);
   return (
     <>
