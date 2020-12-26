@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import moment from "moment";
 import {
   Flex,
   Spacer,
@@ -153,7 +154,14 @@ export default function Header() {
               <Divider />
               {generationStatus?.url && (
                 <a href={`${endpoint}/${generationStatus?.url}`}>
-                  <MenuItem>Скачать Excel</MenuItem>
+                  <MenuItem>
+                    <Box fontSize="14px">
+                      <Text fontSize="16px">Скачать Excel</Text>
+                      <Text color="gray.500">
+                        {moment(generationStatus?.updated_at).fromNow()}
+                      </Text>
+                    </Box>
+                  </MenuItem>
                 </a>
               )}
             </MenuList>
