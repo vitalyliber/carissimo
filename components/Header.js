@@ -30,18 +30,22 @@ import {
 import useSWR from "swr";
 import { endpoint } from "../api/credentials";
 import fetcher from "../api/fetcher";
-import { generateExcelFile, updateGoodsViaExcel } from "../api/goods";
+import { generateExcelFile, getSum, updateGoodsViaExcel } from "../api/goods";
 
-export default function Header() {
+export default function Header({ category = '' }) {
+  console.log("cccc", category);
   const refFile = useRef(null);
   const [loading, setLoading] = useState(false);
   const toast = useToast();
   const router = useRouter();
-  const { data } = useSWR(`${endpoint}/car_goods/sum`, fetcher, {
-    revalidateOnFocus: false,
-    revalidateOnReconnect: false,
-    revalidateOnMount: !router.pathname.includes("edit"),
-  });
+  const { data } = useSWR(
+    `${endpoint}/car_goods/sum?category=${category}`,
+    (url) => getSum(url),
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    }
+  );
   const { data: userInfo } = useSWR(
     `${endpoint}/car_goods/user_info`,
     fetcher,

@@ -1,5 +1,6 @@
 import { useState, useMemo, useEffect } from "react";
 import useSWR from "swr";
+import { Select } from "@chakra-ui/react";
 import { endpoint } from "../api/credentials";
 import { getGoods } from "../api/goods";
 import {
@@ -21,6 +22,8 @@ import useDebounce from "../hooks/useDebounce";
 import Header from "../components/Header";
 import cookieCutter from "cookie-cutter";
 import { useRouter } from "next/router";
+import fetcher from "../api/fetcher";
+const ALL = "Все";
 
 export default function Admin() {
   const router = useRouter();
@@ -33,21 +36,38 @@ export default function Admin() {
   const [value, setValue] = useState("");
   const [page, setPage] = useState(1);
   const debouncedValue = useDebounce(value, 500);
-
+  const [selectedCategory, setSelectedCategory] = useState(ALL);
+  const { data: categoriesData } = useSWR(
+    `${endpoint}/car_goods/categories`,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    }
+  );
+  const categories = useMemo(() => {
+    if (categoriesData) {
+      return [ALL, ...categoriesData];
+    }
+  }, [categoriesData]);
+  const filterCategory = useMemo(
+    () => (selectedCategory === ALL ? "" : selectedCategory),
+    [selectedCategory]
+  );
   const { data, mutate } = useSWR(
     `${endpoint}/car_goods?search=${debouncedValue}&limit=10&page=${page}&inactive=${
       inactive ? "true" : ""
-    }`,
+    }&category=${filterCategory}`,
     getGoods
   );
   const handleChange = (event) => {
     setValue(event.target.value);
-    setPage(1)
+    setPage(1);
   };
   const splitValue = useMemo(() => debouncedValue.split(" "), [debouncedValue]);
   return (
     <>
-      <Header />
+      <Header category={filterCategory} />
       <Box p={4}>
         <InputGroup mb={2}>
           <Input
@@ -78,6 +98,18 @@ export default function Admin() {
           pb={2}
           mb={10}
         >
+          {categories && (
+            <Box>
+              <Select
+                onChange={(e) => setSelectedCategory(e.target.value)}
+                isFullWidth={false}
+              >
+                {categories.map((category) => (
+                  <option value={category}>{category}</option>
+                ))}
+              </Select>
+            </Box>
+          )}
           <Checkbox onChange={(e) => setInactive(e.target.checked)}>
             Показать скрытые
           </Checkbox>

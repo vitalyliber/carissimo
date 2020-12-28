@@ -77,3 +77,15 @@ export const generateExcelFile = async () => {
     return data;
   });
 };
+
+export const getSum = async (url, params) => {
+  const token = await cookieCutter.get("token");
+  return axios({
+    method: "get",
+    url,
+    params: { ...params, token },
+  }).then(({ data }) => {
+    console.log(url, data);
+    return data;
+  });
+};

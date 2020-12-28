@@ -83,37 +83,22 @@ export default function Form({ onSubmit, values }) {
         </FormControl>
         <FormControl isDisabled={!values} mt={4} id="balance">
           <FormLabel>Остаток</FormLabel>
-          <NumberInput defaultValue={0} min={0}>
-            <NumberInputField name="balance" ref={register()} />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
+          <Input type='number' name="balance" ref={register()} />
+          <FormErrorMessage>
+            {errors.balance && errors.balance.message}
+          </FormErrorMessage>
           <FormHelperText>Количество товара в наличие на слкаде</FormHelperText>
         </FormControl>
-        <FormControl isDisabled={!values} mt={4} id="price" isRequired>
+        <FormControl isDisabled={!values} mt={4} id="price">
           <FormLabel>Цена</FormLabel>
-          <NumberInput defaultValue={0} min={0}>
-            <NumberInputField name="price" ref={register({ required: true })} />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
+          <Input type='number' name="price" ref={register()} />
           <FormErrorMessage>
             {errors.price && errors.price.message}
           </FormErrorMessage>
         </FormControl>
         <FormControl isDisabled={!values} mt={4} id="purchase_price">
           <FormLabel>Закупочная цена</FormLabel>
-          <NumberInput defaultValue={0} min={0}>
-            <NumberInputField name="purchase_price" ref={register()} />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
+          <Input type='number' name="purchase_price" ref={register()} />
           <FormErrorMessage>
             {errors.purchase_price && errors.purchase_price.message}
           </FormErrorMessage>
