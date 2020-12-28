@@ -65,14 +65,6 @@ export default function Form({ onSubmit, values }) {
             {errors.oem_article_code && errors.oem_article_code.message}
           </FormErrorMessage>
         </FormControl>
-        <FormControl isDisabled={!values} mt={4} id="good_code">
-          <FormLabel>Код товара</FormLabel>
-          <Input name="good_code" ref={register()} />
-          <FormHelperText>Например: 071017</FormHelperText>
-          <FormErrorMessage>
-            {errors.good_code && errors.good_code.message}
-          </FormErrorMessage>
-        </FormControl>
         <FormControl isDisabled={!values} mt={4} id="producer">
           <FormLabel>Производитель</FormLabel>
           <Input name="producer" ref={register()} />
@@ -80,6 +72,25 @@ export default function Form({ onSubmit, values }) {
           <FormErrorMessage>
             {errors.producer && errors.producer.message}
           </FormErrorMessage>
+        </FormControl>
+        <FormControl isDisabled={!values} mt={4} id="category">
+          <FormLabel>Категория</FormLabel>
+          <Input name="category" ref={register()} />
+          <FormHelperText>Например: Легковые/Грузовые/Иномарки</FormHelperText>
+          <FormErrorMessage>
+            {errors.category && errors.category.message}
+          </FormErrorMessage>
+        </FormControl>
+        <FormControl isDisabled={!values} mt={4} id="balance">
+          <FormLabel>Остаток</FormLabel>
+          <NumberInput defaultValue={0} min={0}>
+            <NumberInputField name="balance" ref={register()} />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+          <FormHelperText>Количество товара в наличие на слкаде</FormHelperText>
         </FormControl>
         <FormControl isDisabled={!values} mt={4} id="price" isRequired>
           <FormLabel>Цена</FormLabel>
@@ -107,29 +118,13 @@ export default function Form({ onSubmit, values }) {
             {errors.purchase_price && errors.purchase_price.message}
           </FormErrorMessage>
         </FormControl>
-        <FormControl isDisabled={!values} mt={4} id="balance">
-          <FormLabel>Остаток</FormLabel>
-          <NumberInput defaultValue={0} min={0}>
-            <NumberInputField name="balance" ref={register()} />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
-          <FormHelperText>Количество товара в наличие на слкаде</FormHelperText>
-        </FormControl>
         <FormControl isDisabled={!values} mt={4} id="package">
           <FormLabel>Единица измерения</FormLabel>
-          <Select ref={register()} name="package">
-            <option>шт</option>
-          </Select>
-        </FormControl>
-        <FormControl isDisabled={!values} mt={4} id="auto_type">
-          <FormLabel>Тип</FormLabel>
-          <Select ref={register()} name="auto_type">
-            <option value="car">Легковой</option>
-            <option value="truck">Грузовой</option>
-          </Select>
+          <Input name="package" ref={register()} />
+          <FormHelperText>Например: Шт/Упаковка/Короб/Палета</FormHelperText>
+          <FormErrorMessage>
+            {errors.package && errors.package.message}
+          </FormErrorMessage>
         </FormControl>
         <FormControl isDisabled={!values} mt={4} id="comment">
           <FormLabel>Комментарий</FormLabel>

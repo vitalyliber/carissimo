@@ -28,22 +28,13 @@ import { EditIcon } from "@chakra-ui/icons";
 import Highlighter from "react-highlight-words";
 import { editGood } from "../api/goods";
 import { useRouter } from "next/router";
-import { mutate } from "swr";
+import useSWR, { mutate } from "swr";
 import { endpoint } from "../api/credentials";
 import Changes from "./Changes";
+import fetcher from "../api/fetcher";
 
-export default function Tile({
-  id,
-  name,
-  good_code,
-  producer,
-  bar_code,
-  article_code,
-  search,
-  balance,
-  price,
-  mutateList,
-}) {
+export default function Tile(props) {
+  const { id, name, search, balance, price, mutateList } = props;
   const [isLoading, setIsLoading] = useState(false);
   const { onOpen, onClose: initialOnClose, isOpen } = useDisclosure();
   const initialRef = useRef(null);
@@ -54,6 +45,10 @@ export default function Tile({
   };
   const router = useRouter();
   const toast = useToast();
+  const { data } = useSWR(`${endpoint}/car_goods/fields`, fetcher, {
+    revalidateOnFocus: false,
+    revalidateOnReconnect: false,
+  });
   return (
     <>
       <Box
@@ -73,20 +68,20 @@ export default function Tile({
           />
         </Heading>
         <Wrap direction="row">
-          {article_code?.length > 0 && (
-            <WrapItem>
-              <Badge variant="outline" fontSize="0.8em">
-                Арт: {article_code}
-              </Badge>
-            </WrapItem>
-          )}
-          {producer?.length > 0 && (
-            <WrapItem>
-              <Badge variant="outline" fontSize="0.8em">
-                Пост: {producer}
-              </Badge>
-            </WrapItem>
-          )}
+          {["article_code", "producer", "category"]
+            .filter((field) => !!props[field])
+            .map((field) => (
+              <WrapItem>
+                <Badge variant="outline" fontSize="0.8em">
+                  {data && data[field]}: {props[field]}
+                </Badge>
+              </WrapItem>
+            ))}
+          <WrapItem>
+            <Badge variant="outline" fontSize="0.8em">
+              {props["active"] ? "Активно" : "Скрыто"}
+            </Badge>
+          </WrapItem>
         </Wrap>
         <Wrap mt={2} direction="row">
           <WrapItem>

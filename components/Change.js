@@ -1,9 +1,20 @@
 import { Box, Stack, Text, VStack, StackDivider } from "@chakra-ui/react";
 import moment from "moment";
 import 'moment/locale/ru'
+import useSWR from "swr";
+import {endpoint} from "../api/credentials";
+import fetcher from "../api/fetcher";
 moment.locale('ru')
 
 export default function Change({ user, created_at, object_changes }) {
+  const { data } = useSWR(
+    `${endpoint}/car_goods/fields`,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    }
+  );
   return (
     <Box mb={5}>
       <Stack
@@ -30,7 +41,7 @@ export default function Change({ user, created_at, object_changes }) {
         {Object.keys(object_changes).map((key) => (
           <Box ml={2} mr={2}>
             <Text fontSize="14px" fontWeight="bolder">
-              {key}
+              {data && data[key]}
             </Text>
             <Text fontSize="14px">Было: {object_changes[key][0]}</Text>
             <Text fontSize="14px">Стало: {object_changes[key][1]}</Text>

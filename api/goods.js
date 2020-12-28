@@ -48,16 +48,18 @@ export const deleteGood = async (id) => {
   });
 };
 
-export const updateGoodsViaExcel = file => {
+export const updateGoodsViaExcel = async (file) => {
+  const token = await cookieCutter.get("token");
   const formData = new FormData();
   formData.append("file", file);
+  formData.append("token", token);
   return axios({
     method: "post",
     url: `${endpoint}/car_goods/excel_update`,
     data: formData,
     headers: {
-      'Content-Type': 'multipart/form-data',
-    }
+      "Content-Type": "multipart/form-data",
+    },
   }).then(({ data }) => {
     console.log("updateGoodsViaExcel", data);
     return data;
