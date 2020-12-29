@@ -5,18 +5,24 @@ import {
   FormLabel,
   FormHelperText,
   Input,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
+  Text,
   Textarea,
-  FormErrorMessage,
   Button,
-  Select,
+  FormErrorMessage,
 } from "@chakra-ui/react";
+import useSWR from "swr";
+import { endpoint } from "../api/credentials";
+import fetcher from "../api/fetcher";
 
 export default function Form({ onSubmit, values }) {
+  const { data: categoriesData } = useSWR(
+    `${endpoint}/car_goods/categories`,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    }
+  );
   const {
     handleSubmit,
     errors,
@@ -76,14 +82,29 @@ export default function Form({ onSubmit, values }) {
         <FormControl isDisabled={!values} mt={4} id="category">
           <FormLabel>Категория</FormLabel>
           <Input name="category" ref={register()} />
-          <FormHelperText>Например: Легковые/Грузовые/Иномарки</FormHelperText>
+          <FormHelperText>
+            Выберите:{" "}
+            {categoriesData?.map((category, index) => (
+              <>
+                {index !== 0 ? " / " : ""}
+                <Text
+                  onClick={() => setValue("category", category)}
+                  cursor="pointer"
+                  color="blue.500"
+                  display="inline"
+                >
+                  {category}
+                </Text>
+              </>
+            ))}
+          </FormHelperText>
           <FormErrorMessage>
             {errors.category && errors.category.message}
           </FormErrorMessage>
         </FormControl>
         <FormControl isDisabled={!values} mt={4} id="balance">
           <FormLabel>Остаток</FormLabel>
-          <Input type='number' name="balance" ref={register()} />
+          <Input type="number" name="balance" ref={register()} />
           <FormErrorMessage>
             {errors.balance && errors.balance.message}
           </FormErrorMessage>
@@ -91,14 +112,14 @@ export default function Form({ onSubmit, values }) {
         </FormControl>
         <FormControl isDisabled={!values} mt={4} id="price">
           <FormLabel>Цена</FormLabel>
-          <Input type='number' name="price" ref={register()} />
+          <Input type="number" name="price" ref={register()} />
           <FormErrorMessage>
             {errors.price && errors.price.message}
           </FormErrorMessage>
         </FormControl>
         <FormControl isDisabled={!values} mt={4} id="purchase_price">
           <FormLabel>Закупочная цена</FormLabel>
-          <Input type='number' name="purchase_price" ref={register()} />
+          <Input type="number" name="purchase_price" ref={register()} />
           <FormErrorMessage>
             {errors.purchase_price && errors.purchase_price.message}
           </FormErrorMessage>
