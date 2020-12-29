@@ -15,6 +15,7 @@ import {
   CircularProgress,
   useToast,
   Box,
+  Tooltip,
 } from "@chakra-ui/react";
 import cookieCutter from "cookie-cutter";
 import { useRouter } from "next/router";
@@ -32,7 +33,7 @@ import { endpoint } from "../api/credentials";
 import fetcher from "../api/fetcher";
 import { generateExcelFile, getSum, updateGoodsViaExcel } from "../api/goods";
 
-export default function Header({ category = '' }) {
+export default function Header({ category = "" }) {
   console.log("cccc", category);
   const refFile = useRef(null);
   const [loading, setLoading] = useState(false);
@@ -88,43 +89,51 @@ export default function Header({ category = '' }) {
         <Stack direction="row" spacing={4} align="center">
           <Link href="/create">
             <a>
-              <IconButton
-                colorScheme="teal"
-                aria-label="Добавить товар"
-                icon={<AddIcon />}
-              />
+              <Tooltip label="Добавить товар" aria-label="A tooltip">
+                <IconButton
+                  colorScheme="teal"
+                  aria-label="Добавить товар"
+                  icon={<AddIcon />}
+                />
+              </Tooltip>
             </a>
           </Link>
           <Link href="/actions">
             <a>
-              <IconButton
-                colorScheme="teal"
-                aria-label="Список изменений"
-                icon={<TimeIcon />}
-              />
+              <Tooltip label="История изменений" aria-label="A tooltip">
+                <IconButton
+                  colorScheme="teal"
+                  aria-label="История изменений"
+                  icon={<TimeIcon />}
+                />
+              </Tooltip>
             </a>
           </Link>
           {userInfo?.admin && (
-            <IconButton
-              colorScheme="red"
-              aria-label="Обновить с помощью Excel"
-              onClick={async () => {
-                await refFile.current.click();
-              }}
-              isLoading={loading}
-              icon={<RepeatIcon />}
-            />
+            <Tooltip label="Выгрузить товары на портал из Excel" aria-label="A tooltip">
+              <IconButton
+                colorScheme="red"
+                aria-label="Выгрузить товары на портал из Excel"
+                onClick={async () => {
+                  await refFile.current.click();
+                }}
+                isLoading={loading}
+                icon={<RepeatIcon />}
+              />
+            </Tooltip>
           )}
           <Menu>
-            <MenuButton
-              isLoading={["new_processing", "in_processing"].includes(
-                generationStatus?.processing_status
-              )}
-              colorScheme="blue"
-              aria-label="Скачать Excel файл"
-              as={IconButton}
-              icon={<DownloadIcon />}
-            />
+            <Tooltip label="Скачать все товары в формате Excel" aria-label="A tooltip">
+              <MenuButton
+                isLoading={["new_processing", "in_processing"].includes(
+                  generationStatus?.processing_status
+                )}
+                colorScheme="blue"
+                aria-label="Скачать все товары в формате Excel"
+                as={IconButton}
+                icon={<DownloadIcon />}
+              />
+            </Tooltip>
             <MenuList>
               <MenuItem
                 onClick={async () => {
@@ -172,11 +181,13 @@ export default function Header({ category = '' }) {
           </Menu>
 
           <Menu>
-            <MenuButton
-              as={IconButton}
-              aria-label="Настройки"
-              icon={<SettingsIcon />}
-            />
+            <Tooltip label="Настройки" aria-label="A tooltip">
+              <MenuButton
+                as={IconButton}
+                aria-label="Настройки"
+                icon={<SettingsIcon />}
+              />
+            </Tooltip>
             <MenuList>
               {userInfo && (
                 <>
