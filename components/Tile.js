@@ -22,6 +22,7 @@ import {
   ModalCloseButton,
   IconButton,
   useToast,
+  Text,
 } from "@chakra-ui/react";
 import { EditIcon } from "@chakra-ui/icons";
 
@@ -32,9 +33,10 @@ import useSWR, { mutate } from "swr";
 import { endpoint } from "../api/credentials";
 import Changes from "./Changes";
 import fetcher from "../api/fetcher";
+import moment from "moment";
 
 export default function Tile(props) {
-  const { id, name, search, balance, price, mutateList } = props;
+  const { id, name, search, balance, price, updated_at, mutateList } = props;
   const [isLoading, setIsLoading] = useState(false);
   const { onOpen, onClose: initialOnClose, isOpen } = useDisclosure();
   const initialRef = useRef(null);
@@ -117,6 +119,9 @@ export default function Tile(props) {
               />
             </a>
           </Link>
+        </Box>
+        <Box position="absolute" right={3} bottom={3}>
+          <Text fontSize="14px" color="gray.500">{moment(updated_at).fromNow()}</Text>
         </Box>
       </Box>
       <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={initialRef}>
