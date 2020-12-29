@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import moment from "moment";
 import {
   Flex,
@@ -34,7 +34,7 @@ import fetcher from "../api/fetcher";
 import { generateExcelFile, getSum, updateGoodsViaExcel } from "../api/goods";
 
 export default function Header({ category = "" }) {
-  console.log("cccc", category);
+  const [checkingGeneration, setCheckingGeneration] = useState(false);
   const refFile = useRef(null);
   const [loading, setLoading] = useState(false);
   const toast = useToast();
@@ -57,8 +57,22 @@ export default function Header({ category = "" }) {
   );
   const { data: generationStatus, mutate: mutateGenerationStatus } = useSWR(
     `${endpoint}/car_goods/generation_status`,
-    fetcher
+    fetcher,
+    {
+      refreshInterval: checkingGeneration ? 3000 : 0,
+    }
   );
+  useEffect(() => {
+    const status = generationStatus?.processing_status;
+    if (
+      status?.length > 0 &&
+      !["new_processing", "in_processing"].includes(
+        generationStatus?.processing_status
+      )
+    ) {
+      setCheckingGeneration(false);
+    }
+  }, [generationStatus?.processing_status]);
   return (
     <>
       <Flex alignItems="center" p={4}>
@@ -110,7 +124,10 @@ export default function Header({ category = "" }) {
             </a>
           </Link>
           {userInfo?.admin && (
-            <Tooltip label="Выгрузить товары на портал из Excel" aria-label="A tooltip">
+            <Tooltip
+              label="Выгрузить товары на портал из Excel"
+              aria-label="A tooltip"
+            >
               <IconButton
                 colorScheme="red"
                 aria-label="Выгрузить товары на портал из Excel"
@@ -123,7 +140,10 @@ export default function Header({ category = "" }) {
             </Tooltip>
           )}
           <Menu>
-            <Tooltip label="Скачать все товары в формате Excel" aria-label="A tooltip">
+            <Tooltip
+              label="Скачать все товары в формате Excel"
+              aria-label="A tooltip"
+            >
               <MenuButton
                 isLoading={["new_processing", "in_processing"].includes(
                   generationStatus?.processing_status
@@ -146,6 +166,7 @@ export default function Header({ category = "" }) {
                       }),
                       false
                     );
+                    setCheckingGeneration(true);
                     toast({
                       title: "Начат процесс создания Excel файла",
                       status: "success",
