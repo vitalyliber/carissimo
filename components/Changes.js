@@ -4,7 +4,7 @@ import { endpoint } from "../api/credentials";
 import fetcher from "../api/fetcher";
 import Change from "./Change";
 
-export default function Changes({ id }) {
+export default function Changes({ id, withName }) {
   const url = id
     ? `${endpoint}/car_goods/${id}/changes`
     : `${endpoint}/car_goods/actions`;
@@ -26,7 +26,7 @@ export default function Changes({ id }) {
     <Box>
       <Divider mb={5} />
       {data.map((el) => (
-        <Change {...el} />
+        <Change withName={withName} {...el} />
       ))}
     </Box>
   );

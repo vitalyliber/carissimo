@@ -7,7 +7,7 @@ export default function Actions() {
     <>
       <Header />
       <Box p={4}>
-        <Changes />
+        <Changes withName={true} />
       </Box>
     </>
   );

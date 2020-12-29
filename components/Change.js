@@ -17,7 +17,7 @@ import { endpoint } from "../api/credentials";
 import fetcher from "../api/fetcher";
 moment.locale("ru");
 
-export default function Change({ user, created_at, object, object_changes }) {
+export default function Change({ user, created_at, object, object_changes, withName = false }) {
   const { data } = useSWR(`${endpoint}/car_goods/fields`, fetcher, {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
@@ -43,18 +43,21 @@ export default function Change({ user, created_at, object, object_changes }) {
           <Spacer />
           <Text color="gray.500">{moment(created_at).fromNow()}</Text>
         </HStack>
-        <HStack>
-          <Text onClick={onCopy} color="gray.500" mt={1}>
-            {name}
-          </Text>
-          <IconButton
-            onClick={onCopy} ml={2}
-            colorScheme="teal"
-            aria-label="Скопировать название"
-            icon={hasCopied ? <CheckIcon /> : <CopyIcon />}
-            size="xs"
-          />
-        </HStack>
+        {withName && (
+          <HStack>
+            <Text onClick={onCopy} color="gray.500" mt={1}>
+              {name}
+            </Text>
+            <IconButton
+              onClick={onCopy}
+              ml={2}
+              colorScheme="teal"
+              aria-label="Скопировать название"
+              icon={hasCopied ? <CheckIcon /> : <CopyIcon />}
+              size="xs"
+            />
+          </HStack>
+        )}
       </Stack>
       <VStack
         divider={<StackDivider borderColor="gray.200" />}
