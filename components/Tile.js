@@ -51,6 +51,37 @@ export default function Tile(props) {
     revalidateOnFocus: false,
     revalidateOnReconnect: false,
   });
+  const updateBalance = async () => {
+    initialOnClose();
+    try {
+      setIsLoading(true);
+      await editGood({ data: { balance: stateBalance }, id });
+      toast({
+        title: "Баланс обновлен",
+        status: "success",
+        duration: 9000,
+        isClosable: true,
+      });
+      mutate(`${endpoint}/car_goods/sum`, {});
+      mutateList(async (data) => ({
+        ...data,
+        list: data?.list.map((el) =>
+          el.id === id ? { ...el, balance: stateBalance } : el
+        ),
+      }));
+      await router.push("/admin");
+    } catch (e) {
+      console.log(e);
+      toast({
+        title: "Ошибка обновления баланса",
+        status: "error",
+        duration: 9000,
+        isClosable: true,
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
   return (
     <>
       <Box
@@ -121,7 +152,9 @@ export default function Tile(props) {
           </Link>
         </Box>
         <Box position="absolute" right={3} bottom={3}>
-          <Text fontSize="14px" color="gray.500">{moment(updated_at).fromNow()}</Text>
+          <Text fontSize="14px" color="gray.500">
+            {moment(updated_at).fromNow()}
+          </Text>
         </Box>
       </Box>
       <Modal isOpen={isOpen} onClose={onClose} initialFocusRef={initialRef}>
@@ -130,17 +163,24 @@ export default function Tile(props) {
           <ModalHeader>Редактирования остатка</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <NumberInput
-              defaultValue={stateBalance}
-              min={0}
-              onChange={(value) => setStateBalance(value)}
+            <form
+              onSubmit={(e) => {
+                e.preventDefault();
+                updateBalance()
+              }}
             >
-              <NumberInputField ref={initialRef} />
-              <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
-              </NumberInputStepper>
-            </NumberInput>
+              <NumberInput
+                defaultValue={stateBalance}
+                min={0}
+                onChange={(value) => setStateBalance(value)}
+              >
+                <NumberInputField ref={initialRef} />
+                <NumberInputStepper>
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
+                </NumberInputStepper>
+              </NumberInput>
+            </form>
           </ModalBody>
 
           <ModalFooter>
@@ -149,37 +189,7 @@ export default function Tile(props) {
             </Button>
             <Button
               isLoading={isLoading}
-              onClick={async () => {
-                initialOnClose();
-                try {
-                  setIsLoading(true);
-                  await editGood({ data: { balance: stateBalance }, id });
-                  toast({
-                    title: "Баланс обновлен",
-                    status: "success",
-                    duration: 9000,
-                    isClosable: true,
-                  });
-                  mutate(`${endpoint}/car_goods/sum`, {});
-                  mutateList(async (data) => ({
-                    ...data,
-                    list: data?.list.map((el) =>
-                      el.id === id ? { ...el, balance: stateBalance } : el
-                    ),
-                  }));
-                  await router.push("/admin");
-                } catch (e) {
-                  console.log(e);
-                  toast({
-                    title: "Ошибка обновления баланса",
-                    status: "error",
-                    duration: 9000,
-                    isClosable: true,
-                  });
-                } finally {
-                  setIsLoading(false);
-                }
-              }}
+              onClick={updateBalance}
               colorScheme="blue"
             >
               Сохранить
