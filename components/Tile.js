@@ -120,25 +120,33 @@ export default function Tile(props) {
         </Wrap>
         <Wrap mt={2} direction="row">
           <WrapItem>
-            <Badge colorScheme="green" variant="outline" fontSize="0.8em">
-              Цена:{" "}
+            <Box
+              fontSize="15px"
+              fontWeight="bold"
+              paddingLeft={3}
+              paddingRight={3}
+              paddingTop={1}
+              paddingBottom={1}
+              borderRadius={3}
+              background={balance > 0 ? "green.500" : "gray.400"}
+              color="white"
+              variant="outline"
+              onClick={onOpen}
+              cursor="pointer"
+              display="flex"
+              flexDirection="row"
+              alignItems="center"
+            >
               {new Intl.NumberFormat("ru-RU", {
                 style: "currency",
                 currency: "RUB",
               }).format(price)}
-            </Badge>
-          </WrapItem>
-          <WrapItem>
-            <Badge
-              onClick={onOpen}
-              cursor="pointer"
-              colorScheme={balance > 0 ? "blue" : "green"}
-              variant="outline"
-              fontSize="0.8em"
-            >
-              Остаток: {balance}
+              <Text ml={2} mr={2}>
+                ×
+              </Text>{" "}
+              {balance}
               <EditIcon ml={2} />
-            </Badge>
+            </Box>
           </WrapItem>
         </Wrap>
         <Box position="absolute" right={3} top={3}>
