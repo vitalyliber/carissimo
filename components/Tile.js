@@ -23,8 +23,10 @@ import {
   IconButton,
   useToast,
   Text,
+  Input,
+  HStack,
 } from "@chakra-ui/react";
-import { EditIcon } from "@chakra-ui/icons";
+import { AddIcon, MinusIcon, EditIcon } from "@chakra-ui/icons";
 
 import Highlighter from "react-highlight-words";
 import { editGood } from "../api/goods";
@@ -166,20 +168,40 @@ export default function Tile(props) {
             <form
               onSubmit={(e) => {
                 e.preventDefault();
-                updateBalance()
+                updateBalance();
               }}
             >
-              <NumberInput
-                defaultValue={stateBalance}
-                min={0}
-                onChange={(value) => setStateBalance(value)}
-              >
-                <NumberInputField ref={initialRef} />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
+              <HStack>
+                <IconButton
+                  isDisabled={!stateBalance}
+                  colorScheme="red"
+                  onClick={() => setStateBalance(stateBalance - 1)}
+                  aria-label="Minus"
+                  icon={<MinusIcon color="white" />}
+                  size="md"
+                  variant="solid"
+                />
+                <Input
+                  type="number"
+                  defaultValue={stateBalance}
+                  value={stateBalance}
+                  min={0}
+                  onChange={(value) => {
+                    const parsedValue = parseInt(value.target.value);
+                    if (parsedValue < 0) return;
+                    setStateBalance(parsedValue);
+                  }}
+                />
+                <IconButton
+                  variant="solid"
+                  colorScheme="green"
+                  onClick={() => setStateBalance((stateBalance || 0) + 1)}
+                  aria-label="Plus"
+                  icon={<AddIcon color="white" />}
+                  size="md"
+                  ml={3}
+                />
+              </HStack>
             </form>
           </ModalBody>
 
