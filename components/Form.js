@@ -112,14 +112,14 @@ export default function Form({ onSubmit, values }) {
         </FormControl>
         <FormControl isDisabled={!values} mt={4} id="price">
           <FormLabel>Цена</FormLabel>
-          <Input min={0} type="number" name="price" ref={register()} />
+          <Input min={0} type="number" step="0.01" name="price" ref={register()} />
           <FormErrorMessage>
             {errors.price && errors.price.message}
           </FormErrorMessage>
         </FormControl>
         <FormControl isDisabled={!values} mt={4} id="purchase_price">
           <FormLabel>Закупочная цена</FormLabel>
-          <Input min={0} type="number" name="purchase_price" ref={register()} />
+          <Input min={0} type="number" step="0.01" name="purchase_price" ref={register()} />
           <FormErrorMessage>
             {errors.purchase_price && errors.purchase_price.message}
           </FormErrorMessage>

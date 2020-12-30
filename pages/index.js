@@ -28,10 +28,10 @@ export default function Home({}) {
     <Center alignItems="center" height="100vh">
       <Flex alignItems="center" flexDirection="column" width="100%">
         <Heading mb={2} size="lg">
-          Учет товаров
+          Ревизия
         </Heading>
         <Text color="gray.500" mb={10}>
-          ИП Моргунова Оксана Георгиевна
+          Сервис учета товаров
         </Text>
 
         <Box pl={[4, 0]} pr={[4, 0]} width={["100%", "30%"]}>
