@@ -116,6 +116,7 @@ export default function Form({ onSubmit, values }) {
           <FormErrorMessage>
             {errors.price && errors.price.message}
           </FormErrorMessage>
+          <FormHelperText>Используйте запятую в качестве разделителя</FormHelperText>
         </FormControl>
         <FormControl isDisabled={!values} mt={4} id="purchase_price">
           <FormLabel>Закупочная цена</FormLabel>
@@ -123,6 +124,7 @@ export default function Form({ onSubmit, values }) {
           <FormErrorMessage>
             {errors.purchase_price && errors.purchase_price.message}
           </FormErrorMessage>
+          <FormHelperText>Используйте запятую в качестве разделителя</FormHelperText>
         </FormControl>
         <FormControl isDisabled={!values} mt={4} id="package">
           <FormLabel>Единица измерения</FormLabel>
