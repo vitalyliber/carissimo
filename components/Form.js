@@ -23,6 +23,14 @@ export default function Form({ onSubmit, values }) {
       revalidateOnReconnect: false,
     }
   );
+  const { data: packagesData } = useSWR(
+    `${endpoint}/car_goods/packages`,
+    fetcher,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+    }
+  );
   const {
     handleSubmit,
     errors,
@@ -104,7 +112,13 @@ export default function Form({ onSubmit, values }) {
         </FormControl>
         <FormControl isDisabled={!values} mt={4} id="balance">
           <FormLabel>Остаток</FormLabel>
-          <Input min={0} type="number" name="balance" ref={register()} />
+          <Input
+            min={0}
+            type="number"
+            name="balance"
+            step="0.01"
+            ref={register()}
+          />
           <FormErrorMessage>
             {errors.balance && errors.balance.message}
           </FormErrorMessage>
@@ -112,24 +126,55 @@ export default function Form({ onSubmit, values }) {
         </FormControl>
         <FormControl isDisabled={!values} mt={4} id="price">
           <FormLabel>Цена</FormLabel>
-          <Input min={0} type="number" step="0.01" name="price" ref={register()} />
+          <Input
+            min={0}
+            type="number"
+            step="0.01"
+            name="price"
+            ref={register()}
+          />
           <FormErrorMessage>
             {errors.price && errors.price.message}
           </FormErrorMessage>
-          <FormHelperText>Используйте запятую в качестве разделителя</FormHelperText>
+          <FormHelperText>
+            Используйте запятую в качестве разделителя
+          </FormHelperText>
         </FormControl>
         <FormControl isDisabled={!values} mt={4} id="purchase_price">
           <FormLabel>Закупочная цена</FormLabel>
-          <Input min={0} type="number" step="0.01" name="purchase_price" ref={register()} />
+          <Input
+            min={0}
+            type="number"
+            step="0.01"
+            name="purchase_price"
+            ref={register()}
+          />
           <FormErrorMessage>
             {errors.purchase_price && errors.purchase_price.message}
           </FormErrorMessage>
-          <FormHelperText>Используйте запятую в качестве разделителя</FormHelperText>
+          <FormHelperText>
+            Используйте запятую в качестве разделителя
+          </FormHelperText>
         </FormControl>
         <FormControl isDisabled={!values} mt={4} id="package">
           <FormLabel>Единица измерения</FormLabel>
           <Input name="package" ref={register()} />
-          <FormHelperText>Например: Шт/Упаковка/Короб/Палета</FormHelperText>
+          <FormHelperText>
+            Выберите:{" "}
+            {packagesData?.map((el, index) => (
+              <>
+                {index !== 0 ? " / " : ""}
+                <Text
+                  onClick={() => setValue("package", el)}
+                  cursor="pointer"
+                  color="blue.500"
+                  display="inline"
+                >
+                  {el}
+                </Text>
+              </>
+            ))}
+          </FormHelperText>
           <FormErrorMessage>
             {errors.package && errors.package.message}
           </FormErrorMessage>

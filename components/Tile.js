@@ -193,9 +193,10 @@ export default function Tile(props) {
                   type="number"
                   defaultValue={stateBalance}
                   value={stateBalance}
+                  step="0.01"
                   min={0}
                   onChange={(value) => {
-                    const parsedValue = parseInt(value.target.value);
+                    const parsedValue = parseFloat(value.target.value);
                     if (parsedValue < 0) return;
                     setStateBalance(parsedValue);
                   }}
