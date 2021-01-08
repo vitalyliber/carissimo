@@ -1,7 +1,7 @@
 import { useState, useMemo, useEffect } from "react";
 import useSWR from "swr";
 import { Select } from "@chakra-ui/react";
-import { endpoint } from "../api/credentials";
+import { checkAuth, endpoint } from "../api/credentials";
 import { getGoods } from "../api/goods";
 import {
   Input,
@@ -27,10 +27,17 @@ const ALL = "Все";
 
 export default function Admin() {
   const router = useRouter();
-  useEffect(() => {
-    if (cookieCutter.get("token")?.length === 0) {
+  const checkToken = async () => {
+    try {
+      const key = cookieCutter.get("token");
+      await checkAuth({ token: key });
+    } catch (e) {
+      console.log(e);
       router.push("/");
     }
+  };
+  useEffect(() => {
+    checkToken();
   }, []);
   const [inactive, setInactive] = useState(false);
   const [value, setValue] = useState("");
