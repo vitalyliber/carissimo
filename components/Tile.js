@@ -7,11 +7,6 @@ import {
   Wrap,
   WrapItem,
   useDisclosure,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-  NumberIncrementStepper,
-  NumberDecrementStepper,
   Button,
   Modal,
   ModalOverlay,
@@ -23,7 +18,6 @@ import {
   IconButton,
   useToast,
   Text,
-  Input,
   HStack,
 } from "@chakra-ui/react";
 import { AddIcon, MinusIcon, EditIcon } from "@chakra-ui/icons";
@@ -36,6 +30,7 @@ import { endpoint } from "../api/credentials";
 import Changes from "./Changes";
 import fetcher from "../api/fetcher";
 import moment from "moment";
+import NumberInput from "./NumberInput";
 
 export default function Tile(props) {
   const { id, name, search, balance, price, updated_at, mutateList } = props;
@@ -189,12 +184,10 @@ export default function Tile(props) {
                   size="md"
                   variant="solid"
                 />
-                <Input
+                <NumberInput
                   type="number"
                   defaultValue={stateBalance}
                   value={stateBalance}
-                  step="0.01"
-                  min={0}
                   onChange={(value) => {
                     const parsedValue = parseFloat(value.target.value);
                     if (parsedValue < 0) return;

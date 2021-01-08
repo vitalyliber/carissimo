@@ -13,6 +13,7 @@ import {
 import useSWR from "swr";
 import { endpoint } from "../api/credentials";
 import fetcher from "../api/fetcher";
+import NumberInput from "./NumberInput";
 
 export default function Form({ onSubmit, values }) {
   const { data: categoriesData } = useSWR(
@@ -44,6 +45,7 @@ export default function Form({ onSubmit, values }) {
       Object.keys(values).forEach((key) => setValue(key, values[key]));
     }
   }, [values]);
+
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit(setError))}>
@@ -112,13 +114,7 @@ export default function Form({ onSubmit, values }) {
         </FormControl>
         <FormControl isDisabled={!values} mt={4} id="balance">
           <FormLabel>Остаток</FormLabel>
-          <Input
-            min={0}
-            type="number"
-            name="balance"
-            step="0.01"
-            ref={register()}
-          />
+          <NumberInput name="balance" register={register} />
           <FormErrorMessage>
             {errors.balance && errors.balance.message}
           </FormErrorMessage>
@@ -126,13 +122,7 @@ export default function Form({ onSubmit, values }) {
         </FormControl>
         <FormControl isDisabled={!values} mt={4} id="price">
           <FormLabel>Цена</FormLabel>
-          <Input
-            min={0}
-            type="number"
-            step="0.01"
-            name="price"
-            ref={register()}
-          />
+          <NumberInput name="price" register={register()} />
           <FormErrorMessage>
             {errors.price && errors.price.message}
           </FormErrorMessage>
@@ -142,13 +132,7 @@ export default function Form({ onSubmit, values }) {
         </FormControl>
         <FormControl isDisabled={!values} mt={4} id="purchase_price">
           <FormLabel>Закупочная цена</FormLabel>
-          <Input
-            min={0}
-            type="number"
-            step="0.01"
-            name="purchase_price"
-            ref={register()}
-          />
+          <NumberInput name="purchase_price" register={register()} />
           <FormErrorMessage>
             {errors.purchase_price && errors.purchase_price.message}
           </FormErrorMessage>
