@@ -19,11 +19,23 @@ import {
   useToast,
   Text,
   HStack,
+  AlertDialog,
+  AlertDialogOverlay,
+  AlertDialogContent,
+  AlertDialogHeader,
+  AlertDialogBody,
+  AlertDialogFooter,
 } from "@chakra-ui/react";
-import { AddIcon, MinusIcon, EditIcon } from "@chakra-ui/icons";
+import {
+  AddIcon,
+  MinusIcon,
+  EditIcon,
+  ViewIcon,
+  ViewOffIcon,
+} from "@chakra-ui/icons";
 
 import Highlighter from "react-highlight-words";
-import { editGood } from "../api/goods";
+import { deleteGood, editGood } from "../api/goods";
 import { useRouter } from "next/router";
 import useSWR, { mutate } from "swr";
 import { endpoint } from "../api/credentials";
@@ -33,8 +45,23 @@ import moment from "moment";
 import NumberInput from "./NumberInput";
 
 export default function Tile(props) {
-  const { id, name, search, balance, price, updated_at, mutateList } = props;
+  const {
+    id,
+    name,
+    search,
+    balance,
+    price,
+    updated_at,
+    mutateList,
+    active,
+  } = props;
   const [isLoading, setIsLoading] = useState(false);
+  const {
+    onOpen: onConfirmationOpen,
+    onClose: onConfirmationClose,
+    isOpen: isConfirmationOpen,
+  } = useDisclosure();
+  const cancelRef = useRef();
   const { onOpen, onClose: initialOnClose, isOpen } = useDisclosure();
   const initialRef = useRef(null);
   const [stateBalance, setStateBalance] = useState(balance);
@@ -144,6 +171,50 @@ export default function Tile(props) {
             </Box>
           </WrapItem>
         </Wrap>
+        <Box position="absolute" right={59} top={3}>
+          {active && (
+            <IconButton
+              onClick={onConfirmationOpen}
+              isLoading={isLoading}
+              size="sm"
+              colorScheme="red"
+              aria-label="Hide"
+              icon={<ViewOffIcon />}
+            />
+          )}
+          {!active && (
+            <IconButton
+              onClick={async () => {
+                try {
+                  setIsLoading(true);
+                  await editGood({ data: { active: true }, id });
+                  mutateList();
+                  toast({
+                    title: "Товар активирован",
+                    status: "success",
+                    duration: 9000,
+                    isClosable: true,
+                  });
+                } catch (e) {
+                  console.log(e);
+                  toast({
+                    title: "Ошибка активации товара",
+                    status: "error",
+                    duration: 9000,
+                    isClosable: true,
+                  });
+                } finally {
+                  setIsLoading(false);
+                }
+              }}
+              size="sm"
+              colorScheme="green"
+              aria-label="Show"
+              isLoading={isLoading}
+              icon={<ViewIcon />}
+            />
+          )}
+        </Box>
         <Box position="absolute" right={3} top={3}>
           <Link href={`/edit/${id}`}>
             <a>
@@ -224,6 +295,57 @@ export default function Tile(props) {
           </ModalBody>
         </ModalContent>
       </Modal>
+      <AlertDialog
+        isOpen={isConfirmationOpen}
+        leastDestructiveRef={cancelRef}
+        onClose={onConfirmationClose}
+      >
+        <AlertDialogOverlay>
+          <AlertDialogContent>
+            <AlertDialogHeader fontSize="lg" fontWeight="bold">
+              Скрытие товара
+            </AlertDialogHeader>
+
+            <AlertDialogBody>Вы уверены?</AlertDialogBody>
+
+            <AlertDialogFooter>
+              <Button ref={cancelRef} onClick={onConfirmationClose}>
+                Отмена
+              </Button>
+              <Button
+                colorScheme="red"
+                onClick={async () => {
+                  onClose();
+                  try {
+                    setIsLoading(true);
+                    await deleteGood(id);
+                    toast({
+                      title: "Товар скрыт",
+                      status: "success",
+                      duration: 9000,
+                      isClosable: true,
+                    });
+                    mutateList();
+                  } catch (e) {
+                    console.log(e);
+                    toast({
+                      title: "Ошибка скрытия товара",
+                      status: "error",
+                      duration: 9000,
+                      isClosable: true,
+                    });
+                  } finally {
+                    setIsLoading(false);
+                  }
+                }}
+                ml={3}
+              >
+                Скрыть
+              </Button>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialogOverlay>
+      </AlertDialog>
     </>
   );
 }
